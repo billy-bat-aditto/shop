@@ -1,0 +1,6 @@
+{
+  "name": "MediExpences by Aditto",
+  "description": "Liquid Glass Pharmacy Management & POS application with multi-item cart, dual pricing, stock & expiry tracking, and dues management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
