@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { usePharmacy } from '../context/PharmacyContext';
 import { ExpenseCategory, PaymentMethod } from '../types';
+import { PWAInstallButton } from './PWAInstallButton';
 
 export const ScreenMore: React.FC = () => {
   const {
@@ -857,6 +858,9 @@ export const ScreenMore: React.FC = () => {
               })}
             </div>
           </div>
+
+          {/* Progressive Web App (PWA & Mobile App Store Builder Ready) */}
+          <PWAInstallButton variant="card" />
 
           {/* Data Backup & Cloud / Local Sync */}
           <div className="glass-card rounded-[24px] p-4 flex flex-col gap-3">

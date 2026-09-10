@@ -1,5 +1,6 @@
 import React from 'react';
 import { usePharmacy } from '../context/PharmacyContext';
+import { PWAInstallButton } from './PWAInstallButton';
 
 interface HeaderProps {
   title?: string;
@@ -98,6 +99,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           <div className="flex items-center gap-2">
+            <PWAInstallButton variant="compact" />
             <button
               id="theme-mode-toggle-btn"
               onClick={toggleTheme}

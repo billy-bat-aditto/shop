@@ -11,6 +11,7 @@ import { ScreenAddEditMedicine } from './components/ScreenAddEditMedicine';
 import { ScreenDues } from './components/ScreenDues';
 import { ScreenMore } from './components/ScreenMore';
 import { CsvImportModal } from './components/CsvImportModal';
+import { OfflineIndicator } from './components/OfflineIndicator';
 
 const AppContent: React.FC = () => {
   const {
@@ -129,6 +130,9 @@ const AppContent: React.FC = () => {
 
         {/* Floating Glass Dock Bottom Navigation */}
         {!showCheckout && !isAddMedModalOpen && <Navbar />}
+
+        {/* Global Offline Network Status Indicator */}
+        <OfflineIndicator />
       </div>
     </div>
   );
