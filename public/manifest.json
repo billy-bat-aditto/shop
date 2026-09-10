@@ -1,12 +1,17 @@
 {
   "id": "/",
-  "name": "MediExpences Pharmacy POS",
+  "name": "MediExpences by Aditto",
   "short_name": "MediExpences",
-  "description": "Liquid Glass Pharmacy Management & POS application with multi-item cart, dual pricing, stock & expiry tracking, and dues management.",
+  "description": "Liquid Glass Pharmacy Management & POS application with multi-item cart, dual pricing, stock & expiry tracking, dues management, and real-time MedEx market price lookup.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "orientation": "portrait-primary",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "any",
   "background_color": "#0a0614",
   "theme_color": "#6d4aff",
   "categories": [
@@ -18,6 +23,14 @@
   "lang": "en",
   "dir": "ltr",
   "prefer_related_applications": false,
+  "related_applications": [],
+  "handle_links": "preferred",
+  "launch_handler": {
+    "client_mode": "auto"
+  },
+  "edge_side_panel": {
+    "preferred_width": 480
+  },
   "icons": [
     {
       "src": "/pwa-192x192.png",
@@ -90,6 +103,18 @@
       "short_name": "Dues",
       "description": "Track and Collect Ledger Dues",
       "url": "/?tab=dues",
+      "icons": [
+        {
+          "src": "/pwa-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "MedEx Market Price",
+      "short_name": "MedEx",
+      "description": "Check Real-Time BD Medicine MRP",
+      "url": "/?tab=medex",
       "icons": [
         {
           "src": "/pwa-192x192.png",

@@ -1,11 +1,11 @@
 // Service Worker for MediExpences Pharmacy POS
-const CACHE_NAME = 'mediexpences-cache-v1';
+const CACHE_NAME = 'mediexpences-cache-v2';
 const PRECACHE_URLS = [
   '/',
   '/index.html',
   '/manifest.json',
+  '/manifest.webmanifest',
   '/icon.svg',
-  '/logo.png',
   '/pwa-192x192.png',
   '/pwa-512x512.png',
   '/pwa-maskable-512x512.png',
@@ -17,10 +17,15 @@ const PRECACHE_URLS = [
 // Install Event: Pre-cache static shell
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(PRECACHE_URLS).catch((err) => {
-        console.warn('Pre-caching partial failure:', err);
-      });
+    caches.open(CACHE_NAME).then(async (cache) => {
+      // Pre-cache core URLs safely so partial 404 does not crash installation
+      await Promise.allSettled(
+        PRECACHE_URLS.map((url) =>
+          cache.add(url).catch((err) => {
+            console.warn(`[PWA SW] Pre-cache skipped for ${url}:`, err);
+          })
+        )
+      );
     }).then(() => self.skipWaiting())
   );
 });

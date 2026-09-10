@@ -275,6 +275,19 @@ async function startServer() {
     }
   });
 
+  // PWA Service Worker & Web App Manifest specific headers for PWABuilder
+  app.get('/sw.js', (req, res, next) => {
+    res.setHeader('Service-Worker-Allowed', '/');
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    next();
+  });
+
+  app.get(['/manifest.json', '/manifest.webmanifest'], (req, res, next) => {
+    res.setHeader('Content-Type', 'application/manifest+json; charset=utf-8');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    next();
+  });
+
   // Vite middleware for development
   if (process.env.NODE_ENV !== 'production') {
     const isHmrDisabled = process.env.DISABLE_HMR === 'true';
