@@ -121,8 +121,8 @@ export const ScreenNewSale: React.FC<ScreenNewSaleProps> = ({ onOpenCheckout }) 
 
       {/* Search & Barcode Scan Pill Input Bar */}
       <div className="relative w-full mb-4">
-        <div className="relative flex items-center w-full h-12 rounded-full bg-white dark:bg-white/[0.08] backdrop-blur-xl px-4 border border-gray-200 dark:border-white/10 shadow-lg focus-within:border-[#6d4aff] focus-within:bg-gray-50 dark:focus-within:bg-white/[0.12] transition-all">
-          <span className="material-symbols-outlined text-gray-500 dark:text-[#938ea2] text-[22px] mr-2.5 select-none">
+        <div className="relative flex items-center w-full h-12 rounded-full liquid-input px-4 transition-all">
+          <span className="material-symbols-outlined text-gray-400 dark:text-[#938ea2] text-[22px] mr-2.5 select-none">
             search
           </span>
           <input
@@ -144,7 +144,7 @@ export const ScreenNewSale: React.FC<ScreenNewSaleProps> = ({ onOpenCheckout }) 
             type="button"
             title="Scan barcode"
             onClick={() => setSearchTerm('Ace Plus')}
-            className="ml-1 w-8 h-8 rounded-full bg-[#6d4aff]/30 flex items-center justify-center text-[#6d4aff] dark:text-[#d0bcff] hover:bg-[#6d4aff]/50 active:scale-95 transition-all cursor-pointer"
+            className="ml-1 w-8 h-8 rounded-full bg-[#6d4aff]/30 flex items-center justify-center text-[#6d4aff] dark:text-[#d0bcff] hover:bg-[#6d4aff]/50 active:scale-95 transition-all cursor-pointer border border-[#6d4aff]/40 shadow-sm"
           >
             <span className="material-symbols-outlined text-[19px]">qr_code_scanner</span>
           </button>
@@ -196,10 +196,10 @@ export const ScreenNewSale: React.FC<ScreenNewSaleProps> = ({ onOpenCheckout }) 
               <div
                 key={med.id}
                 onClick={() => handleOpenDispense(med)}
-                className={`relative overflow-hidden rounded-2xl p-4 transition-all cursor-pointer group border ${
+                className={`relative overflow-hidden rounded-[26px] p-4 transition-all cursor-pointer group ${
                   isSelected
-                    ? 'bg-[#6d4aff]/15 border-[#8b5cf6]/50 shadow-[0_0_20px_rgba(109,74,255,0.25)]'
-                    : 'bg-white/[0.06] backdrop-blur-xl border-white/10 hover:bg-white/[0.1] shadow-md'
+                    ? 'bg-[#6d4aff]/20 border border-[#8b5cf6]/60 shadow-[0_0_24px_rgba(109,74,255,0.35)]'
+                    : 'liquid-glass-card hover:scale-[1.01]'
                 }`}
               >
                 <div className="flex items-start justify-between gap-3">

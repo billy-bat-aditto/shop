@@ -10,6 +10,7 @@ import { ScreenInventory } from './components/ScreenInventory';
 import { ScreenAddEditMedicine } from './components/ScreenAddEditMedicine';
 import { ScreenDues } from './components/ScreenDues';
 import { ScreenMore } from './components/ScreenMore';
+import { CsvImportModal } from './components/CsvImportModal';
 
 const AppContent: React.FC = () => {
   const {
@@ -20,7 +21,9 @@ const AppContent: React.FC = () => {
     setEditingMedicine,
     activeReceipt,
     setActiveReceipt,
-    settings
+    settings,
+    isCsvModalOpen,
+    setIsCsvModalOpen
   } = usePharmacy();
 
   // State to toggle checkout screen view
@@ -52,16 +55,18 @@ const AppContent: React.FC = () => {
 
   return (
     <div className={`min-h-screen relative overflow-x-hidden transition-colors duration-300 ${isDark ? 'dark bg-[#0a0614] text-[#e8dff5]' : 'light bg-[#f4f2f8] text-[#0a0518]'}`}>
-      {/* Liquid Glass Atmospheric Ambient Background Glow Orbs */}
+      {/* iOS 26 Liquid Glass Dynamic Fluid Mesh Ambient Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        {/* Top-left Purple Ambient Orb */}
-        <div className={`absolute -top-32 -left-32 w-96 h-96 rounded-full blur-[110px] ${isDark ? 'bg-[#6d4aff]/20' : 'bg-[#6d4aff]/10'}`} />
-        {/* Center-right Violet Ambient Orb */}
-        <div className={`absolute top-1/3 -right-36 w-96 h-96 rounded-full blur-[120px] ${isDark ? 'bg-[#8b5cf6]/15' : 'bg-[#8b5cf6]/8'}`} />
-        {/* Bottom-left Emerald Subtle Glow */}
-        <div className={`absolute -bottom-24 -left-20 w-80 h-80 rounded-full blur-[100px] ${isDark ? 'bg-[#007d55]/15' : 'bg-[#007d55]/8'}`} />
-        {/* Fine Grain/Glass overlay */}
-        <div className={`absolute inset-0 bg-radial from-transparent ${isDark ? 'to-black/40 opacity-40' : 'to-purple-900/5 opacity-10'}`} />
+        {/* Top-left Electric Indigo Fluid Orb */}
+        <div className={`absolute -top-24 -left-24 w-[380px] h-[380px] rounded-full blur-[110px] animate-liquid-orb-1 ${isDark ? 'bg-[#6d4aff]/25' : 'bg-[#7c5cff]/14'}`} />
+        {/* Center-right Bioluminescent Cyan/Mint Fluid Orb */}
+        <div className={`absolute top-1/4 -right-32 w-[360px] h-[360px] rounded-full blur-[115px] animate-liquid-orb-2 ${isDark ? 'bg-[#00f5a0]/12' : 'bg-[#00d084]/8'}`} />
+        {/* Mid-left Violet Glow */}
+        <div className={`absolute top-2/3 -left-32 w-[340px] h-[340px] rounded-full blur-[105px] animate-liquid-orb-3 ${isDark ? 'bg-[#8b5cf6]/18' : 'bg-[#a78bff]/10'}`} />
+        {/* Bottom-right Coral/Rose Accent Orb */}
+        <div className={`absolute -bottom-20 -right-20 w-[300px] h-[300px] rounded-full blur-[120px] animate-liquid-orb-1 ${isDark ? 'bg-[#e84188]/12' : 'bg-[#ff6584]/6'}`} />
+        {/* iOS Caustic Glass Radial Vignette */}
+        <div className={`absolute inset-0 bg-radial from-transparent ${isDark ? 'to-black/60 opacity-60' : 'to-purple-950/5 opacity-20'}`} />
       </div>
 
       {/* Main App Container Constrained to Mobile Viewport Standard */}
@@ -115,6 +120,12 @@ const AppContent: React.FC = () => {
 
         {/* Global Multi-Item Cart Drawer Modal */}
         <CartDrawer onProceedToCheckout={handleOpenCheckout} />
+
+        {/* Global CSV Import Modal */}
+        <CsvImportModal
+          isOpen={isCsvModalOpen}
+          onClose={() => setIsCsvModalOpen(false)}
+        />
 
         {/* Floating Glass Dock Bottom Navigation */}
         {!showCheckout && !isAddMedModalOpen && <Navbar />}

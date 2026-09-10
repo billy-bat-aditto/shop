@@ -15,6 +15,12 @@ import {
   INITIAL_SALES,
   INITIAL_SETTINGS
 } from '../mockData';
+import {
+  generateMedicinesCsv,
+  generateSalesCsv,
+  getSampleCsvContent,
+  downloadBlobFile
+} from '../utils/csvUtils';
 
 interface PharmacyContextType {
   // State
@@ -80,6 +86,24 @@ interface PharmacyContextType {
   importBackup: (jsonStr: string) => boolean;
   resetAllData: () => void;
 
+  // CSV Import & Export methods
+  importMedicinesList: (
+    items: Array<Omit<Medicine, 'id'>>,
+    mode: 'merge' | 'append' | 'replace'
+  ) => { added: number; updated: number; total: number };
+  exportMedicinesCsv: () => void;
+  exportSalesCsv: () => void;
+  downloadSampleCsv: () => void;
+
+  // Aliases for backup/data management
+  exportDataJson: () => void;
+  importDataJson: (jsonStr: string) => boolean;
+  resetToMockData: () => void;
+
+  // CSV Modal UI state
+  isCsvModalOpen: boolean;
+  setIsCsvModalOpen: (open: boolean) => void;
+
   // Calculated stats helpers
   todaySalesTotal: number;
   todayExpensesTotal: number;
@@ -131,6 +155,7 @@ export const PharmacyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [isAddMedModalOpen, setIsAddMedModalOpen] = useState(false);
   const [activeReceipt, setActiveReceipt] = useState<Sale | null>(null);
   const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
+  const [isCsvModalOpen, setIsCsvModalOpen] = useState(false);
 
   // Sync to LocalStorage
   useEffect(() => {
@@ -637,6 +662,88 @@ export const PharmacyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setCart([]);
   };
 
+  // CSV Import & Export Implementations
+  const importMedicinesList = (
+    items: Array<Omit<Medicine, 'id'>>,
+    mode: 'merge' | 'append' | 'replace'
+  ) => {
+    let added = 0;
+    let updated = 0;
+
+    if (mode === 'replace') {
+      const newMeds: Medicine[] = items.map((item, idx) => ({
+        ...item,
+        id: `med-${Date.now()}-${idx + 1}`
+      }));
+      setMedicines(newMeds);
+      return { added: newMeds.length, updated: 0, total: newMeds.length };
+    }
+
+    if (mode === 'append') {
+      const newMeds: Medicine[] = items.map((item, idx) => ({
+        ...item,
+        id: `med-${Date.now()}-${idx + 1}`
+      }));
+      setMedicines(prev => [...newMeds, ...prev]);
+      return { added: newMeds.length, updated: 0, total: newMeds.length };
+    }
+
+    // Default 'merge': update existing if medicine name matches, otherwise add new
+    setMedicines(prev => {
+      const nextList = [...prev];
+      items.forEach((item, idx) => {
+        const existingIdx = nextList.findIndex(
+          m => m.name.toLowerCase().trim() === item.name.toLowerCase().trim()
+        );
+        if (existingIdx >= 0) {
+          updated++;
+          const existing = nextList[existingIdx];
+          nextList[existingIdx] = {
+            ...existing,
+            generic: item.generic || existing.generic,
+            company: item.company || existing.company,
+            rack: item.rack || existing.rack,
+            batch: item.batch || existing.batch,
+            expiry: item.expiry || existing.expiry,
+            unitsPerStrip: item.unitsPerStrip || existing.unitsPerStrip,
+            purchasePrice: item.purchasePrice > 0 ? item.purchasePrice : existing.purchasePrice,
+            stripPrice: item.stripPrice > 0 ? item.stripPrice : existing.stripPrice,
+            piecePrice: item.piecePrice > 0 ? item.piecePrice : existing.piecePrice,
+            stockPieces: existing.stockPieces + (item.stockPieces || 0),
+            lowStockThreshold: item.lowStockThreshold || existing.lowStockThreshold,
+            category: item.category || existing.category
+          };
+        } else {
+          added++;
+          nextList.unshift({
+            ...item,
+            id: `med-${Date.now()}-${idx + 1}`
+          });
+        }
+      });
+      return nextList;
+    });
+
+    return { added, updated, total: added + updated };
+  };
+
+  const exportMedicinesCsv = () => {
+    const csv = generateMedicinesCsv(medicines);
+    const dateStr = new Date().toISOString().slice(0, 10);
+    downloadBlobFile(csv, `MediExpences_Inventory_${dateStr}.csv`);
+  };
+
+  const exportSalesCsv = () => {
+    const csv = generateSalesCsv(sales);
+    const dateStr = new Date().toISOString().slice(0, 10);
+    downloadBlobFile(csv, `MediExpences_Sales_${dateStr}.csv`);
+  };
+
+  const downloadSampleCsv = () => {
+    const csv = getSampleCsvContent();
+    downloadBlobFile(csv, 'medicines_import_template.csv');
+  };
+
   return (
     <PharmacyContext.Provider
       value={{
@@ -658,6 +765,8 @@ export const PharmacyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setActiveReceipt,
         isCartDrawerOpen,
         setIsCartDrawerOpen,
+        isCsvModalOpen,
+        setIsCsvModalOpen,
         addToCart,
         updateCartItemQty,
         removeFromCart,
@@ -676,6 +785,13 @@ export const PharmacyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         exportBackup,
         importBackup,
         resetAllData,
+        importMedicinesList,
+        exportMedicinesCsv,
+        exportSalesCsv,
+        downloadSampleCsv,
+        exportDataJson: exportBackup,
+        importDataJson: importBackup,
+        resetToMockData: resetAllData,
         todaySalesTotal,
         todayExpensesTotal,
         todayProfitTotal,

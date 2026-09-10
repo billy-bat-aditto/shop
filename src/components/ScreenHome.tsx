@@ -54,25 +54,25 @@ export const ScreenHome: React.FC = () => {
         </div>
       </div>
 
-      {/* 2x2 Glass Stat Cards Grid */}
+      {/* 2x2 Liquid Glass Stat Cards Grid */}
       <div className="grid grid-cols-2 gap-3 mb-5">
         {/* 1. Today's Sales */}
         <div
           onClick={() => setActiveTab('sales')}
-          className="glass-card rounded-[24px] p-4 relative overflow-hidden transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+          className="liquid-glass-card rounded-[26px] p-4 relative overflow-hidden transition-all duration-300 hover:scale-[1.02] active:scale-[0.97] cursor-pointer group"
         >
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs text-[#c9c4d9] font-medium">Today's Sales</span>
-            <div className="w-7 h-7 rounded-full bg-[#6d4aff]/25 flex items-center justify-center text-[#e5deff]">
-              <span className="material-symbols-outlined text-[16px]">payments</span>
+            <span className="text-xs text-[#c9c4d9] font-semibold">Today's Sales</span>
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#6d4aff]/40 to-[#a78bff]/30 border border-white/20 flex items-center justify-center text-[#e5deff] shadow-sm">
+              <span className="material-symbols-outlined text-[17px]">payments</span>
             </div>
           </div>
-          <div className="text-2xl font-bold tracking-tight text-white">
+          <div className="text-2xl font-black tracking-tight text-white drop-shadow-sm">
             ৳{todaySalesTotal > 0 ? todaySalesTotal.toLocaleString() : '3,250'}
           </div>
           <div className="flex items-center gap-1 mt-1 text-[#4edea3]">
             <span className="material-symbols-outlined text-[15px]">trending_up</span>
-            <span className="text-[10px] font-semibold">+14% vs ystd</span>
+            <span className="text-[10px] font-bold">+14% vs ystd</span>
           </div>
         </div>
 
@@ -82,20 +82,20 @@ export const ScreenHome: React.FC = () => {
             setActiveTab('more');
             setMoreSubTab('expenses');
           }}
-          className="glass-card rounded-[24px] p-4 relative overflow-hidden transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+          className="liquid-glass-card rounded-[26px] p-4 relative overflow-hidden transition-all duration-300 hover:scale-[1.02] active:scale-[0.97] cursor-pointer group"
         >
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs text-[#c9c4d9] font-medium">Expenses</span>
-            <div className="w-7 h-7 rounded-full bg-red-500/20 flex items-center justify-center text-[#ffb4ab]">
-              <span className="material-symbols-outlined text-[16px]">receipt</span>
+            <span className="text-xs text-[#c9c4d9] font-semibold">Expenses</span>
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-rose-500/30 to-red-400/20 border border-white/20 flex items-center justify-center text-[#ffb4ab] shadow-sm">
+              <span className="material-symbols-outlined text-[17px]">receipt</span>
             </div>
           </div>
-          <div className="text-2xl font-bold tracking-tight text-white">
+          <div className="text-2xl font-black tracking-tight text-white drop-shadow-sm">
             ৳{todayExpensesTotal > 0 ? todayExpensesTotal.toLocaleString() : '500'}
           </div>
           <div className="flex items-center gap-1 mt-1 text-[#ffb4ab]">
             <span className="material-symbols-outlined text-[15px]">trending_down</span>
-            <span className="text-[10px] font-semibold">2 payouts logged</span>
+            <span className="text-[10px] font-bold">2 payouts logged</span>
           </div>
         </div>
 
@@ -105,43 +105,43 @@ export const ScreenHome: React.FC = () => {
             setActiveTab('more');
             setMoreSubTab('reports');
           }}
-          className="glass-card rounded-[24px] p-4 relative overflow-hidden transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+          className="liquid-glass-card rounded-[26px] p-4 relative overflow-hidden transition-all duration-300 hover:scale-[1.02] active:scale-[0.97] cursor-pointer group"
         >
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs text-[#c9c4d9] font-medium">Net Profit</span>
-            <div className="w-7 h-7 rounded-full bg-[#007d55]/40 flex items-center justify-center text-[#4edea3]">
-              <span className="material-symbols-outlined text-[16px]">account_balance_wallet</span>
+            <span className="text-xs text-[#c9c4d9] font-semibold">Net Profit</span>
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#00b074]/40 to-[#4edea3]/30 border border-white/20 flex items-center justify-center text-[#4edea3] shadow-sm">
+              <span className="material-symbols-outlined text-[17px]">account_balance_wallet</span>
             </div>
           </div>
-          <div className="text-2xl font-bold tracking-tight text-[#4edea3] drop-shadow-[0_0_12px_rgba(78,222,163,0.35)]">
+          <div className="text-2xl font-black tracking-tight text-[#4edea3] drop-shadow-[0_0_14px_rgba(78,222,163,0.4)]">
             ৳{todayProfitTotal > 0 ? todayProfitTotal.toLocaleString() : '2,750'}
           </div>
           <div className="flex items-center gap-1 mt-1 text-[#6ffbbe]">
             <span className="material-symbols-outlined text-[15px]">check_circle</span>
-            <span className="text-[10px] font-semibold">{marginPercent}% Margin</span>
+            <span className="text-[10px] font-bold">{marginPercent}% Margin</span>
           </div>
         </div>
 
         {/* 4. Low Stock */}
         <div
           onClick={() => setActiveTab('inventory')}
-          className="glass-card rounded-[24px] p-4 relative overflow-hidden transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+          className="liquid-glass-card rounded-[26px] p-4 relative overflow-hidden transition-all duration-300 hover:scale-[1.02] active:scale-[0.97] cursor-pointer group"
         >
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs text-[#c9c4d9] font-medium">Low Stock</span>
+            <span className="text-xs text-[#c9c4d9] font-semibold">Low Stock</span>
             <div className="relative flex items-center justify-center">
               <span className="w-2.5 h-2.5 rounded-full bg-amber-400 absolute animate-ping opacity-75" />
-              <div className="w-7 h-7 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400">
-                <span className="material-symbols-outlined text-[16px]">warning</span>
+              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500/30 to-amber-400/20 border border-white/20 flex items-center justify-center text-amber-300 shadow-sm">
+                <span className="material-symbols-outlined text-[17px]">warning</span>
               </div>
             </div>
           </div>
-          <div className="text-2xl font-bold tracking-tight text-amber-300 drop-shadow-[0_0_10px_rgba(245,158,11,0.4)]">
+          <div className="text-2xl font-black tracking-tight text-amber-300 drop-shadow-[0_0_12px_rgba(245,158,11,0.45)]">
             {lowStockCount > 0 ? lowStockCount : 7}
           </div>
           <div className="flex items-center gap-1 mt-1 text-amber-400">
             <span className="material-symbols-outlined text-[15px]">priority_high</span>
-            <span className="text-[10px] font-semibold">Action needed</span>
+            <span className="text-[10px] font-bold">Action needed</span>
           </div>
         </div>
       </div>
@@ -149,63 +149,63 @@ export const ScreenHome: React.FC = () => {
       {/* Quick Action Row */}
       <div className="mb-5">
         <div className="flex items-center justify-between mb-2 px-1">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-[#938ea2]">
+          <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#938ea2]">
             Quick Actions
           </span>
-          <span className="text-[10px] text-[#a78bff]">Touch shortcuts</span>
+          <span className="text-[10px] text-[#a78bff] font-semibold">Touch shortcuts</span>
         </div>
         <div className="grid grid-cols-4 gap-2">
-          {/* New Sale CTA (Glowing Purple Gradient) */}
+          {/* New Sale CTA (iOS 26 Liquid Gradient Capsule) */}
           <button
             onClick={() => setActiveTab('sales')}
-            className="group flex flex-col items-center justify-center gap-1.5 py-3 rounded-2xl bg-gradient-to-br from-[#6d4aff] to-[#a78bff] shadow-[0_8px_24px_rgba(109,74,255,0.45),inset_0_1px_1px_rgba(255,255,255,0.35)] transition-all duration-200 active:scale-95 text-white cursor-pointer"
+            className="group flex flex-col items-center justify-center gap-1.5 py-3 rounded-[22px] bg-gradient-to-br from-[#7c5cff] via-[#6d4aff] to-[#5534d1] border-t border-white/45 border-x border-white/20 shadow-[0_8px_24px_rgba(109,74,255,0.45),inset_0_1px_2px_rgba(255,255,255,0.4)] transition-all duration-200 active:scale-95 text-white cursor-pointer"
           >
-            <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+            <div className="w-9 h-9 rounded-full bg-white/25 flex items-center justify-center backdrop-blur-md shadow-inner">
               <span className="material-symbols-outlined text-[20px] text-white">add_shopping_cart</span>
             </div>
-            <span className="text-[10px] font-bold tracking-tight">New Sale</span>
+            <span className="text-[10px] font-extrabold tracking-tight">New Sale</span>
           </button>
 
-          {/* Add Med (Frosted Glass) */}
+          {/* Add Med (Liquid Glass) */}
           <button
             onClick={() => setIsAddMedModalOpen(true)}
-            className="group flex flex-col items-center justify-center gap-1.5 py-3 rounded-2xl bg-white/[0.06] backdrop-blur-xl border border-white/10 shadow-md transition-all duration-200 active:scale-95 text-white hover:bg-white/[0.1] cursor-pointer"
+            className="group flex flex-col items-center justify-center gap-1.5 py-3 rounded-[22px] liquid-glass-card transition-all duration-200 active:scale-95 text-white cursor-pointer"
           >
-            <div className="w-9 h-9 rounded-full bg-[#221d2d] flex items-center justify-center text-[#c9bfff]">
+            <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-[#c9bfff] border border-white/10">
               <span className="material-symbols-outlined text-[20px]">medication</span>
             </div>
-            <span className="text-[10px] font-medium text-[#c9c4d9]">Add Med</span>
+            <span className="text-[10px] font-semibold text-[#c9c4d9]">Add Med</span>
           </button>
 
-          {/* Dues (Frosted Glass) */}
+          {/* Dues (Liquid Glass) */}
           <button
             onClick={() => setActiveTab('dues')}
-            className="group flex flex-col items-center justify-center gap-1.5 py-3 rounded-2xl bg-white/[0.06] backdrop-blur-xl border border-white/10 shadow-md transition-all duration-200 active:scale-95 text-white hover:bg-white/[0.1] cursor-pointer"
+            className="group flex flex-col items-center justify-center gap-1.5 py-3 rounded-[22px] liquid-glass-card transition-all duration-200 active:scale-95 text-white cursor-pointer"
           >
-            <div className="w-9 h-9 rounded-full bg-[#221d2d] flex items-center justify-center text-[#d0bcff]">
+            <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-[#d0bcff] border border-white/10">
               <span className="material-symbols-outlined text-[20px]">pending_actions</span>
             </div>
-            <span className="text-[10px] font-medium text-[#c9c4d9]">Dues</span>
+            <span className="text-[10px] font-semibold text-[#c9c4d9]">Dues</span>
           </button>
 
-          {/* Reports (Frosted Glass) */}
+          {/* Reports (Liquid Glass) */}
           <button
             onClick={() => {
               setActiveTab('more');
               setMoreSubTab('reports');
             }}
-            className="group flex flex-col items-center justify-center gap-1.5 py-3 rounded-2xl bg-white/[0.06] backdrop-blur-xl border border-white/10 shadow-md transition-all duration-200 active:scale-95 text-white hover:bg-white/[0.1] cursor-pointer"
+            className="group flex flex-col items-center justify-center gap-1.5 py-3 rounded-[22px] liquid-glass-card transition-all duration-200 active:scale-95 text-white cursor-pointer"
           >
-            <div className="w-9 h-9 rounded-full bg-[#221d2d] flex items-center justify-center text-[#4edea3]">
+            <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-[#4edea3] border border-white/10">
               <span className="material-symbols-outlined text-[20px]">analytics</span>
             </div>
-            <span className="text-[10px] font-medium text-[#c9c4d9]">Reports</span>
+            <span className="text-[10px] font-semibold text-[#c9c4d9]">Reports</span>
           </button>
         </div>
       </div>
 
       {/* Low Stock Alert Glass Container */}
-      <div className="glass-card rounded-[24px] p-4 relative overflow-hidden">
+      <div className="liquid-glass-card rounded-[28px] p-4 relative overflow-hidden">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-400">

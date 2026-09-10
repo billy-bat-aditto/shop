@@ -17,6 +17,10 @@ export const ScreenMore: React.FC = () => {
     exportDataJson,
     importDataJson,
     resetToMockData,
+    setIsCsvModalOpen,
+    exportMedicinesCsv,
+    exportSalesCsv,
+    downloadSampleCsv,
     todaySalesTotal,
     todayExpensesTotal,
     todayProfitTotal
@@ -114,12 +118,12 @@ export const ScreenMore: React.FC = () => {
   return (
     <div className="flex flex-col w-full pb-36 pt-1">
       {/* Sub-Tabs Selector Navigation (Expenses | Reports | Settings) */}
-      <div className="flex items-center p-1 rounded-2xl bg-white/[0.06] border border-white/10 backdrop-blur-xl mb-4 shadow-md">
+      <div className="flex items-center p-1.5 rounded-[24px] liquid-glass-card mb-4">
         <button
           onClick={() => setMoreSubTab('expenses')}
-          className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+          className={`flex-1 py-2 rounded-[18px] text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 ${
             moreSubTab === 'expenses'
-              ? 'bg-gradient-to-r from-[#6d4aff] to-[#a78bff] text-white shadow-md'
+              ? 'bg-gradient-to-r from-[#7c5cff] to-[#6d4aff] text-white shadow-md border-t border-white/40'
               : 'text-[#938ea2] hover:text-white'
           }`}
         >
@@ -129,9 +133,9 @@ export const ScreenMore: React.FC = () => {
 
         <button
           onClick={() => setMoreSubTab('reports')}
-          className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+          className={`flex-1 py-2 rounded-[18px] text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 ${
             moreSubTab === 'reports'
-              ? 'bg-gradient-to-r from-[#6d4aff] to-[#a78bff] text-white shadow-md'
+              ? 'bg-gradient-to-r from-[#7c5cff] to-[#6d4aff] text-white shadow-md border-t border-white/40'
               : 'text-[#938ea2] hover:text-white'
           }`}
         >
@@ -141,9 +145,9 @@ export const ScreenMore: React.FC = () => {
 
         <button
           onClick={() => setMoreSubTab('settings')}
-          className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+          className={`flex-1 py-2 rounded-[18px] text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 ${
             moreSubTab === 'settings'
-              ? 'bg-gradient-to-r from-[#6d4aff] to-[#a78bff] text-white shadow-md'
+              ? 'bg-gradient-to-r from-[#7c5cff] to-[#6d4aff] text-white shadow-md border-t border-white/40'
               : 'text-[#938ea2] hover:text-white'
           }`}
         >
@@ -156,7 +160,7 @@ export const ScreenMore: React.FC = () => {
       {moreSubTab === 'expenses' && (
         <div className="flex flex-col gap-4 animate-in fade-in duration-200">
           {/* Summary Stat Card */}
-          <div className="glass-card rounded-[24px] p-4 flex items-center justify-between">
+          <div className="liquid-glass-card rounded-[28px] p-4 flex items-center justify-between">
             <div className="flex flex-col">
               <span className="text-[10px] uppercase tracking-wider text-[#ffb4ab] font-bold">
                 Today's Logged Expenses
@@ -168,13 +172,13 @@ export const ScreenMore: React.FC = () => {
                 All daily operations & shop payouts
               </span>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-red-500/20 border border-red-500/30 flex items-center justify-center text-red-300">
+            <div className="w-12 h-12 rounded-2xl bg-red-500/20 border border-red-500/30 flex items-center justify-center text-red-300 shadow-sm">
               <span className="material-symbols-outlined text-[26px]">account_balance</span>
             </div>
           </div>
 
           {/* Quick Add Expense Form */}
-          <div className="glass-card rounded-[24px] p-4 flex flex-col gap-3">
+          <div className="liquid-glass-card rounded-[28px] p-4 flex flex-col gap-3">
             <div className="flex items-center gap-2 pb-1 border-b border-white/10">
               <span className="material-symbols-outlined text-[18px] text-[#a78bff]">add_box</span>
               <span className="text-xs font-bold uppercase text-[#d0bcff]">Log New Expense</span>
@@ -497,25 +501,68 @@ export const ScreenMore: React.FC = () => {
           {/* Data Backup & Cloud / Local Sync */}
           <div className="glass-card rounded-[24px] p-4 flex flex-col gap-3">
             <span className="text-xs font-bold uppercase text-white pb-1 border-b border-white/10">
-              Data Management & Offline Backup
+              CSV Catalog & Spreadsheets
             </span>
             <p className="text-xs text-[#938ea2]">
-              All data is stored directly in browser local storage. Download JSON backups to preserve records.
+              Import or export your entire formulary, inventory counts, and sales history using Excel / CSV spreadsheets.
             </p>
 
             <div className="grid grid-cols-2 gap-2.5 pt-1">
               <button
                 type="button"
-                onClick={exportDataJson}
-                className="h-11 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] border border-white/10 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                onClick={() => setIsCsvModalOpen(true)}
+                className="h-11 rounded-xl bg-gradient-to-r from-[#6d4aff] to-[#a78bff] hover:from-[#5b3adb] hover:to-[#9370ff] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-[#6d4aff]/30 active:scale-95 transition-all cursor-pointer"
               >
-                <span className="material-symbols-outlined text-[18px]">download</span>
-                <span>Export Backup (JSON)</span>
+                <span className="material-symbols-outlined text-[18px]">upload_file</span>
+                <span>Import CSV</span>
               </button>
 
-              <label className="h-11 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] border border-white/10 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer">
-                <span className="material-symbols-outlined text-[18px]">upload</span>
-                <span>Restore Backup</span>
+              <button
+                type="button"
+                onClick={exportMedicinesCsv}
+                className="h-11 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] border border-white/10 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-[18px] text-[#4edea3]">download</span>
+                <span>Export Inventory</span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2.5">
+              <button
+                type="button"
+                onClick={exportSalesCsv}
+                className="h-10 rounded-xl bg-white/[0.05] hover:bg-white/[0.10] border border-white/5 text-white/90 font-medium text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-[16px] text-[#c9bfff]">table_chart</span>
+                <span>Export Sales CSV</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={downloadSampleCsv}
+                className="h-10 rounded-xl bg-white/[0.05] hover:bg-white/[0.10] border border-white/5 text-white/90 font-medium text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-[16px] text-amber-300">file_download</span>
+                <span>Sample Template</span>
+              </button>
+            </div>
+
+            <span className="text-xs font-bold uppercase text-white pt-2 pb-1 border-b border-white/10">
+              System Backup (JSON)
+            </span>
+            <div className="grid grid-cols-2 gap-2.5">
+              <button
+                type="button"
+                onClick={exportDataJson}
+                className="h-10 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] border border-white/10 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-[16px]">download</span>
+                <span>Export JSON</span>
+              </button>
+
+              <label className="h-10 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] border border-white/10 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer">
+                <span className="material-symbols-outlined text-[16px]">upload</span>
+                <span>Restore JSON</span>
                 <input
                   type="file"
                   accept=".json"

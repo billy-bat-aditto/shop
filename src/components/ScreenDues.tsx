@@ -117,7 +117,7 @@ export const ScreenDues: React.FC = () => {
         </div>
       </div>
 
-      {/* Search Input Pill */}
+      {/* Search Input Pill (iOS 26 Liquid Input) */}
       <div className="relative w-full mb-3">
         <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#938ea2]">
           <span className="material-symbols-outlined text-[20px]">search</span>
@@ -127,7 +127,7 @@ export const ScreenDues: React.FC = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search customer name or phone…"
-          className="w-full h-12 pl-10 pr-10 rounded-full bg-white/[0.08] backdrop-blur-xl border border-white/10 text-white placeholder:text-[#938ea2] text-sm focus:outline-none focus:border-[#6d4aff] transition-all"
+          className="w-full h-12 pl-10 pr-10 rounded-full liquid-input text-white placeholder:text-[#938ea2] text-sm focus:outline-none transition-all"
         />
         {search ? (
           <button
@@ -143,30 +143,30 @@ export const ScreenDues: React.FC = () => {
       <div className="flex items-center gap-2 overflow-x-auto pb-2 select-none no-scrollbar">
         <button
           onClick={() => setFilter('all')}
-          className={`px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+          className={`px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 ${
             filter === 'all'
-              ? 'bg-[#6d4aff] text-white shadow-sm'
-              : 'bg-white/[0.06] text-[#938ea2] hover:text-white border border-white/5'
+              ? 'bg-gradient-to-r from-[#7c5cff] to-[#6d4aff] text-white shadow-[0_2px_14px_rgba(109,74,255,0.45)] border-t border-white/40'
+              : 'liquid-pill text-[#938ea2] hover:text-white'
           }`}
         >
           <span>All ({debtors.length})</span>
         </button>
         <button
           onClick={() => setFilter('critical')}
-          className={`px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+          className={`px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 ${
             filter === 'critical'
-              ? 'bg-red-500 text-white shadow-sm'
-              : 'bg-white/[0.06] text-[#938ea2] hover:text-white border border-white/5'
+              ? 'bg-gradient-to-r from-rose-500 to-red-600 text-white shadow-[0_2px_14px_rgba(239,68,68,0.45)] border-t border-white/40'
+              : 'liquid-pill text-[#938ea2] hover:text-white'
           }`}
         >
           <span>Critical (&gt;৳3k)</span>
         </button>
         <button
           onClick={() => setFilter('recent')}
-          className={`px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+          className={`px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all cursor-pointer active:scale-95 ${
             filter === 'recent'
-              ? 'bg-[#4edea3] text-black shadow-sm'
-              : 'bg-white/[0.06] text-[#938ea2] hover:text-white border border-white/5'
+              ? 'bg-gradient-to-r from-[#00d084] to-[#4edea3] text-black font-extrabold shadow-[0_2px_14px_rgba(78,222,163,0.45)] border-t border-white/50'
+              : 'liquid-pill text-[#938ea2] hover:text-white'
           }`}
         >
           <span>Recent Active</span>
@@ -174,7 +174,7 @@ export const ScreenDues: React.FC = () => {
 
         <button
           onClick={() => setIsNewDebtorModalOpen(true)}
-          className="ml-auto px-3 py-1.5 rounded-full bg-[#6d4aff]/20 text-[#d0bcff] border border-[#6d4aff]/40 text-xs font-semibold flex items-center gap-1 hover:bg-[#6d4aff]/30 cursor-pointer"
+          className="ml-auto px-3.5 py-1.5 rounded-full liquid-glass-card text-[#d0bcff] text-xs font-bold flex items-center gap-1 hover:border-white/30 active:scale-95 cursor-pointer"
         >
           <span className="material-symbols-outlined text-[16px]">person_add</span>
           <span>Add Debtor</span>
@@ -200,10 +200,10 @@ export const ScreenDues: React.FC = () => {
             return (
               <div
                 key={debtor.id}
-                className={`w-full rounded-2xl border transition-all duration-300 overflow-hidden ${
+                className={`w-full rounded-[26px] transition-all duration-300 overflow-hidden ${
                   isExpanded
-                    ? 'glass-card bg-[#1a1426]/90 border-white/20 p-4 shadow-xl'
-                    : 'bg-white/[0.05] border-white/10 hover:bg-white/[0.08] p-3.5 cursor-pointer shadow-sm'
+                    ? 'liquid-glass-card p-4 shadow-xl border-white/30'
+                    : 'liquid-glass-card p-3.5 cursor-pointer hover:scale-[1.01]'
                 }`}
                 onClick={() => {
                   if (!isExpanded) setExpandedId(debtor.id);

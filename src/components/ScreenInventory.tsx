@@ -18,7 +18,9 @@ export const ScreenInventory: React.FC<ScreenInventoryProps> = ({
     expiringSoonCount,
     deleteMedicine,
     addToCart,
-    setActiveTab
+    setActiveTab,
+    setIsCsvModalOpen,
+    exportMedicinesCsv
   } = usePharmacy();
 
   const [search, setSearch] = useState('');
@@ -124,9 +126,43 @@ export const ScreenInventory: React.FC<ScreenInventoryProps> = ({
         </div>
       </div>
 
-      {/* Search Input Bar */}
+      {/* Inventory Action Toolbar: Add, Import CSV, Export CSV */}
+      <div className="grid grid-cols-3 gap-2 my-1.5">
+        <button
+          type="button"
+          onClick={onAddMedicine}
+          className="h-10 rounded-2xl liquid-btn-primary text-white font-extrabold text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all cursor-pointer"
+        >
+          <span className="material-symbols-outlined text-[17px]">add</span>
+          <span>Add Med</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setIsCsvModalOpen(true)}
+          className="h-10 rounded-2xl liquid-glass-card text-white font-bold text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all cursor-pointer group hover:border-white/30"
+        >
+          <span className="material-symbols-outlined text-[17px] text-[#a78bff] group-hover:scale-110 transition-transform">
+            upload_file
+          </span>
+          <span>Import CSV</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={exportMedicinesCsv}
+          className="h-10 rounded-2xl liquid-glass-card text-white font-semibold text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all cursor-pointer group hover:border-white/30"
+        >
+          <span className="material-symbols-outlined text-[17px] text-[#4edea3] group-hover:scale-110 transition-transform">
+            download
+          </span>
+          <span>Export CSV</span>
+        </button>
+      </div>
+
+      {/* Search Input Bar (iOS 26 Liquid Glass Capsule) */}
       <div className="relative w-full my-2">
-        <div className="flex items-center w-full h-12 rounded-full bg-white/[0.08] border border-white/10 px-4 shadow-sm backdrop-blur-xl focus-within:border-[#6d4aff] focus-within:bg-white/[0.12] transition-all">
+        <div className="flex items-center w-full h-12 rounded-full liquid-input px-4 transition-all">
           <span className="material-symbols-outlined text-[#938ea2] text-[20px] mr-2.5 select-none">
             search
           </span>
@@ -156,10 +192,10 @@ export const ScreenInventory: React.FC<ScreenInventoryProps> = ({
       <div className="flex items-center gap-2 overflow-x-auto py-2 no-scrollbar -mx-4 px-4 select-none">
         <button
           onClick={() => setActiveFilter('all')}
-          className={`whitespace-nowrap flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+          className={`whitespace-nowrap flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer active:scale-95 ${
             activeFilter === 'all'
-              ? 'bg-[#6d4aff] text-white shadow-[0_0_14px_rgba(109,74,255,0.45)]'
-              : 'bg-white/[0.06] text-[#938ea2] hover:text-white border border-white/5'
+              ? 'bg-gradient-to-r from-[#7c5cff] to-[#6d4aff] text-white shadow-[0_2px_14px_rgba(109,74,255,0.5)] border-t border-white/40'
+              : 'liquid-pill text-[#938ea2] hover:text-white'
           }`}
         >
           <span>All</span>
@@ -170,10 +206,10 @@ export const ScreenInventory: React.FC<ScreenInventoryProps> = ({
 
         <button
           onClick={() => setActiveFilter('low')}
-          className={`whitespace-nowrap flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+          className={`whitespace-nowrap flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer active:scale-95 ${
             activeFilter === 'low'
-              ? 'bg-amber-500 text-black font-bold shadow-[0_0_14px_rgba(245,158,11,0.45)]'
-              : 'bg-white/[0.06] text-[#938ea2] hover:text-white border border-white/5'
+              ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-black shadow-[0_2px_14px_rgba(245,158,11,0.5)] border-t border-white/50'
+              : 'liquid-pill text-[#938ea2] hover:text-white'
           }`}
         >
           <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
@@ -185,10 +221,10 @@ export const ScreenInventory: React.FC<ScreenInventoryProps> = ({
 
         <button
           onClick={() => setActiveFilter('expiring')}
-          className={`whitespace-nowrap flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+          className={`whitespace-nowrap flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer active:scale-95 ${
             activeFilter === 'expiring'
-              ? 'bg-red-500 text-white font-bold shadow-[0_0_14px_rgba(239,68,68,0.45)]'
-              : 'bg-white/[0.06] text-[#938ea2] hover:text-white border border-white/5'
+              ? 'bg-gradient-to-r from-rose-500 to-red-600 text-white shadow-[0_2px_14px_rgba(239,68,68,0.5)] border-t border-white/40'
+              : 'liquid-pill text-[#938ea2] hover:text-white'
           }`}
         >
           <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
@@ -244,7 +280,7 @@ export const ScreenInventory: React.FC<ScreenInventoryProps> = ({
             return (
               <div
                 key={med.id}
-                className="group relative rounded-2xl bg-white/[0.06] border border-white/10 backdrop-blur-xl p-4 shadow-md hover:bg-white/[0.09] transition-all duration-200"
+                className="group relative rounded-[26px] liquid-glass-card p-4 transition-all duration-250 hover:scale-[1.01]"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-start gap-3 min-w-0">
