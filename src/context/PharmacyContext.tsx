@@ -30,8 +30,8 @@ interface PharmacyContextType {
   debtors: CustomerDebtor[];
   expenses: Expense[];
   settings: PharmacySettings;
-  activeTab: 'home' | 'sales' | 'inventory' | 'dues' | 'more';
-  setActiveTab: (tab: 'home' | 'sales' | 'inventory' | 'dues' | 'more') => void;
+  activeTab: 'home' | 'sales' | 'inventory' | 'dues' | 'more' | 'medex';
+  setActiveTab: (tab: 'home' | 'sales' | 'inventory' | 'dues' | 'more' | 'medex') => void;
   moreSubTab: 'expenses' | 'reports' | 'settings';
   setMoreSubTab: (sub: 'expenses' | 'reports' | 'settings') => void;
   
@@ -44,6 +44,14 @@ interface PharmacyContextType {
   setActiveReceipt: (sale: Sale | null) => void;
   isCartDrawerOpen: boolean;
   setIsCartDrawerOpen: (open: boolean) => void;
+  isCsvModalOpen: boolean;
+  setIsCsvModalOpen: (open: boolean) => void;
+  isMedexModalOpen: boolean;
+  setIsMedexModalOpen: (open: boolean) => void;
+  medexInitialQuery: string;
+  setMedexInitialQuery: (q: string) => void;
+  openMedexPriceChecker: (query?: string) => void;
+  closeMedexPriceChecker: () => void;
 
   // Actions
   addToCart: (
@@ -100,10 +108,6 @@ interface PharmacyContextType {
   importDataJson: (jsonStr: string) => boolean;
   resetToMockData: () => void;
 
-  // CSV Modal UI state
-  isCsvModalOpen: boolean;
-  setIsCsvModalOpen: (open: boolean) => void;
-
   // Calculated stats helpers
   todaySalesTotal: number;
   todayExpensesTotal: number;
@@ -149,13 +153,24 @@ export const PharmacyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   });
 
   // UI state
-  const [activeTab, setActiveTab] = useState<'home' | 'sales' | 'inventory' | 'dues' | 'more'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'sales' | 'inventory' | 'dues' | 'more' | 'medex'>('home');
   const [moreSubTab, setMoreSubTab] = useState<'expenses' | 'reports' | 'settings'>('expenses');
   const [editingMedicine, setEditingMedicine] = useState<Medicine | null>(null);
   const [isAddMedModalOpen, setIsAddMedModalOpen] = useState(false);
   const [activeReceipt, setActiveReceipt] = useState<Sale | null>(null);
   const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
   const [isCsvModalOpen, setIsCsvModalOpen] = useState(false);
+  const [isMedexModalOpen, setIsMedexModalOpen] = useState(false);
+  const [medexInitialQuery, setMedexInitialQuery] = useState('');
+
+  const openMedexPriceChecker = (query = '') => {
+    setMedexInitialQuery(query);
+    setIsMedexModalOpen(true);
+  };
+
+  const closeMedexPriceChecker = () => {
+    setIsMedexModalOpen(false);
+  };
 
   // Sync to LocalStorage
   useEffect(() => {
@@ -767,6 +782,12 @@ export const PharmacyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setIsCartDrawerOpen,
         isCsvModalOpen,
         setIsCsvModalOpen,
+        isMedexModalOpen,
+        setIsMedexModalOpen,
+        medexInitialQuery,
+        setMedexInitialQuery,
+        openMedexPriceChecker,
+        closeMedexPriceChecker,
         addToCart,
         updateCartItemQty,
         removeFromCart,

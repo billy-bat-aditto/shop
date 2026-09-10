@@ -12,7 +12,8 @@ export const ScreenNewSale: React.FC<ScreenNewSaleProps> = ({ onOpenCheckout }) 
     addToCart,
     cartTotalCount,
     cartTotalPrice,
-    setIsCartDrawerOpen
+    setIsCartDrawerOpen,
+    openMedexPriceChecker
   } = usePharmacy();
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -148,6 +149,17 @@ export const ScreenNewSale: React.FC<ScreenNewSaleProps> = ({ onOpenCheckout }) 
           >
             <span className="material-symbols-outlined text-[19px]">qr_code_scanner</span>
           </button>
+
+          <button
+            type="button"
+            title="Check live market MRP on medex.com.bd"
+            onClick={() => openMedexPriceChecker(searchTerm)}
+            className="ml-1 px-2.5 h-8 rounded-full bg-gradient-to-r from-[#1a9e75]/25 to-[#4edea3]/20 flex items-center gap-1 text-[#4edea3] hover:bg-[#1a9e75]/35 active:scale-95 transition-all cursor-pointer border border-[#1a9e75]/40 text-xs font-bold shadow-sm"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-[#4edea3] animate-pulse" />
+            <span className="material-symbols-outlined text-[15px]">travel_explore</span>
+            <span className="hidden sm:inline">MedEx</span>
+          </button>
         </div>
       </div>
 
@@ -180,8 +192,19 @@ export const ScreenNewSale: React.FC<ScreenNewSaleProps> = ({ onOpenCheckout }) 
       {/* Medicine Search Results Section */}
       <div className="flex flex-col gap-3 mb-5">
         {filteredMeds.length === 0 ? (
-          <div className="p-8 text-center glass-card rounded-2xl text-[#938ea2]">
-            <p className="text-sm">No medicines found matching "{searchTerm}".</p>
+          <div className="p-8 text-center glass-card rounded-2xl text-[#938ea2] flex flex-col items-center">
+            <p className="text-sm">No inventory medicines found matching "{searchTerm}".</p>
+            {searchTerm ? (
+              <button
+                type="button"
+                onClick={() => openMedexPriceChecker(searchTerm)}
+                className="mt-3 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1a9e75]/25 text-[#4edea3] hover:bg-[#1a9e75]/40 border border-[#1a9e75]/40 text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-md"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-[#4edea3] animate-pulse" />
+                <span className="material-symbols-outlined text-[16px]">travel_explore</span>
+                <span>Lookup "{searchTerm}" on MedEx BD</span>
+              </button>
+            ) : null}
             <button
               onClick={() => setSearchTerm('')}
               className="mt-2 text-xs text-[#a78bff] underline font-medium cursor-pointer"

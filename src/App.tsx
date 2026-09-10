@@ -10,6 +10,8 @@ import { ScreenInventory } from './components/ScreenInventory';
 import { ScreenAddEditMedicine } from './components/ScreenAddEditMedicine';
 import { ScreenDues } from './components/ScreenDues';
 import { ScreenMore } from './components/ScreenMore';
+import { ScreenMedexPrice } from './components/ScreenMedexPrice';
+import { MedexPriceModal } from './components/MedexPriceModal';
 import { CsvImportModal } from './components/CsvImportModal';
 import { OfflineIndicator } from './components/OfflineIndicator';
 
@@ -115,12 +117,16 @@ const AppContent: React.FC = () => {
               )}
               {activeTab === 'dues' && <ScreenDues />}
               {activeTab === 'more' && <ScreenMore />}
+              {activeTab === 'medex' && <ScreenMedexPrice />}
             </>
           )}
         </main>
 
         {/* Global Multi-Item Cart Drawer Modal */}
         <CartDrawer onProceedToCheckout={handleOpenCheckout} />
+
+        {/* Global MedEx Real-Time Price Checker Modal */}
+        <MedexPriceModal />
 
         {/* Global CSV Import Modal */}
         <CsvImportModal

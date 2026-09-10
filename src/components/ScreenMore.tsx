@@ -24,7 +24,8 @@ export const ScreenMore: React.FC = () => {
     downloadSampleCsv,
     todaySalesTotal,
     todayExpensesTotal,
-    todayProfitTotal
+    todayProfitTotal,
+    openMedexPriceChecker
   } = usePharmacy();
 
   // Expense form state
@@ -87,6 +88,35 @@ export const ScreenMore: React.FC = () => {
 
     setIsEditingPharmacy(false);
     showToast(`Pharmacy updated to "${formPharmacyName.trim()}"! ✨`);
+  };
+
+  const handleCustomLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      showToast('Please select a valid image file (PNG, JPG, SVG, WebP)');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 512;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, 512, 512);
+          const dataUrl = canvas.toDataURL('image/png');
+          updateSettings({ logoUrl: dataUrl });
+          showToast('Custom pharmacy logo updated! ✨');
+        }
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleAddExpense = (e: React.FormEvent) => {
@@ -676,6 +706,35 @@ export const ScreenMore: React.FC = () => {
             )}
           </div>
 
+          {/* MedEx Real-Time Market Price Checker Utility */}
+          <div className="glass-card rounded-[24px] p-4 flex flex-col gap-3 border border-[#1a9e75]/30 bg-gradient-to-br from-[#1a9e75]/15 via-[#0e0a1b]/60 to-[#4edea3]/10">
+            <div className="flex items-center justify-between pb-1 border-b border-white/10">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-[#1a9e75]/25 text-[#4edea3] flex items-center justify-center shadow-sm">
+                  <span className="material-symbols-outlined text-[19px]">travel_explore</span>
+                </div>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs font-bold uppercase text-white">MedEx Real-Time BD Price</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#4edea3] animate-pulse" />
+                  </div>
+                  <span className="text-[10px] text-[#4edea3] font-semibold">Live medex.com.bd scraper & database</span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => openMedexPriceChecker()}
+                className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#1a9e75] to-[#4edea3] text-slate-950 font-black text-xs hover:opacity-95 active:scale-95 transition-all shadow-md flex items-center gap-1 cursor-pointer"
+              >
+                <span>Launch</span>
+                <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+              </button>
+            </div>
+            <p className="text-xs text-[#938ea2] leading-relaxed">
+              Verify real-time Bangladesh medicine retail MRPs, per-piece & per-strip breakdowns, manufacturer pricing, and generic alternatives directly from the official MedEx database. You can also sync live MRPs to your local inventory with a single tap.
+            </p>
+          </div>
+
           {/* Theme & Aesthetics Control */}
           <div className="glass-card rounded-[24px] p-4 flex flex-col gap-3">
             <span className="text-xs font-bold uppercase text-white pb-1 border-b border-white/10">
@@ -746,7 +805,9 @@ export const ScreenMore: React.FC = () => {
                     Active App Logo
                   </span>
                   <span className="text-sm font-bold text-white mt-0.5">
-                    {settings.logoUrl?.includes('capsule')
+                    {settings.logoUrl?.startsWith('data:')
+                      ? 'Custom Uploaded Logo'
+                      : settings.logoUrl?.includes('capsule')
                       ? 'Bioluminescent Capsule'
                       : settings.logoUrl?.includes('hex')
                       ? 'Hexagonal Rx Prism'
@@ -755,20 +816,48 @@ export const ScreenMore: React.FC = () => {
                       : 'Liquid Glass Cross'}
                   </span>
                   <span className="text-[11px] text-[#938ea2]">
-                    Syncs to Git /public/logo.png
+                    Used on Dashboard, Receipts, and App Shell
                   </span>
                 </div>
               </div>
 
-              <a
-                href={settings.logoUrl || '/logos/liquid-cross.jpg'}
-                download="logo.png"
-                className="px-3 py-1.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.15] border border-white/15 text-white font-semibold text-xs flex items-center gap-1 transition-all active:scale-95 cursor-pointer shrink-0"
-                title="Download for your Git repository"
-              >
-                <span className="material-symbols-outlined text-[16px]">download</span>
-                <span>Download</span>
-              </a>
+              <div className="flex items-center gap-2">
+                <label
+                  className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#6d4aff] to-[#a78bff] text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-[#6d4aff]/30 active:scale-95 transition-all cursor-pointer shrink-0"
+                  title="Upload any image from phone or computer"
+                >
+                  <span className="material-symbols-outlined text-[16px]">add_photo_alternate</span>
+                  <span>Upload</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleCustomLogoUpload}
+                    className="hidden"
+                  />
+                </label>
+
+                <a
+                  href={settings.logoUrl || '/logos/liquid-cross.jpg'}
+                  download="app-logo.png"
+                  className="px-2.5 py-1.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.15] border border-white/15 text-white font-semibold text-xs flex items-center gap-1 transition-all active:scale-95 cursor-pointer shrink-0"
+                  title="Download active logo image file"
+                >
+                  <span className="material-symbols-outlined text-[16px]">download</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Custom Upload Prompt Banner */}
+            <div className="p-3 rounded-2xl bg-[#6d4aff]/10 border border-[#6d4aff]/20 flex items-start gap-2.5">
+              <span className="material-symbols-outlined text-[#a78bff] text-[18px] shrink-0 mt-0.5">info</span>
+              <div className="flex flex-col text-xs text-[#c9c4d9] leading-relaxed">
+                <span className="font-bold text-white">App Icon & In-App Logo Customization</span>
+                <span className="text-[11px] text-[#938ea2] mt-0.5">
+                  • <strong>Inside the App:</strong> Uploading or selecting a logo here immediately updates the Dashboard, Top Bar, and Invoices.
+                  <br />
+                  • <strong>Phone Home Screen (Launcher Icon):</strong> For your installed APK (via PWABuilder), the launcher icon on your phone is set from <code className="text-[#a78bff]">public/pwa-512x512.png</code> during the build. Download your chosen logo and replace it in your repository before building your final APK.
+                </span>
+              </div>
             </div>
 
             {/* 4 Logo Cards Grid */}

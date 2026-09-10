@@ -112,3 +112,29 @@ export interface PharmacySettings {
   monthlyBudget: number;
   logoUrl?: string;
 }
+
+export interface MedexPackage {
+  type: 'unit_strip' | 'pack_item';
+  unitPrice?: string | null;
+  stripPrice?: string | null;
+  packInfo?: string | null;
+  label?: string | null;
+  price?: string | null;
+}
+
+export interface MedexMedicineResult {
+  id: string;
+  name: string;
+  form: string;
+  icon?: string;
+  link: string;
+  generic: string;
+  company: string;
+  description?: string;
+  unitPrice?: string | null;
+  stripPrice?: string | null;
+  packInfo?: string | null;
+  packages?: MedexPackage[];
+  indications?: string | null;
+  dosage?: string | null;
+}

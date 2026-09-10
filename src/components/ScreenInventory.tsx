@@ -20,7 +20,8 @@ export const ScreenInventory: React.FC<ScreenInventoryProps> = ({
     addToCart,
     setActiveTab,
     setIsCsvModalOpen,
-    exportMedicinesCsv
+    exportMedicinesCsv,
+    openMedexPriceChecker
   } = usePharmacy();
 
   const [search, setSearch] = useState('');
@@ -126,15 +127,26 @@ export const ScreenInventory: React.FC<ScreenInventoryProps> = ({
         </div>
       </div>
 
-      {/* Inventory Action Toolbar: Add, Import CSV, Export CSV */}
-      <div className="grid grid-cols-3 gap-2 my-1.5">
+      {/* Inventory Action Toolbar: Add, MedEx Price, Import CSV, Export CSV */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 my-1.5">
         <button
           type="button"
           onClick={onAddMedicine}
-          className="h-10 rounded-2xl liquid-btn-primary text-white font-extrabold text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all cursor-pointer"
+          className="h-10 rounded-2xl liquid-btn-primary text-white font-extrabold text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all cursor-pointer keep-white"
         >
           <span className="material-symbols-outlined text-[17px]">add</span>
           <span>Add Med</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => openMedexPriceChecker(search)}
+          className="h-10 rounded-2xl bg-gradient-to-r from-[#1a9e75]/25 to-[#4edea3]/20 border border-[#1a9e75]/40 text-[#4edea3] hover:bg-[#1a9e75]/35 font-extrabold text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all cursor-pointer shadow-sm"
+          title="Check official real-time medicine prices on medex.com.bd"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-[#4edea3] animate-pulse" />
+          <span className="material-symbols-outlined text-[17px]">travel_explore</span>
+          <span>MedEx Price</span>
         </button>
 
         <button
@@ -158,6 +170,34 @@ export const ScreenInventory: React.FC<ScreenInventoryProps> = ({
           </span>
           <span>Export CSV</span>
         </button>
+      </div>
+
+      {/* Real-time MedEx Market Price Checker Banner */}
+      <div
+        onClick={() => openMedexPriceChecker(search || 'Napa')}
+        className="my-1.5 p-2.5 rounded-2xl bg-gradient-to-r from-[#1a9e75]/15 via-white/[0.04] to-[#4edea3]/10 border border-[#1a9e75]/30 flex items-center justify-between cursor-pointer hover:border-[#4edea3]/50 transition-all group active:scale-[0.99]"
+      >
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-8 h-8 rounded-xl bg-[#1a9e75]/25 text-[#4edea3] flex items-center justify-center shrink-0 shadow-sm">
+            <span className="material-symbols-outlined text-lg group-hover:scale-110 transition-transform">travel_explore</span>
+          </div>
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs font-bold text-white">Check Real-Time MedEx Price</span>
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded-full text-[9px] font-extrabold bg-[#1a9e75]/20 text-[#4edea3] border border-[#1a9e75]/40">
+                <span className="w-1 h-1 rounded-full bg-[#4edea3] animate-pulse" />
+                <span>medex.com.bd</span>
+              </span>
+            </div>
+            <p className="text-[10px] text-[#938ea2] truncate">
+              {search ? `Lookup live market MRP for "${search}"` : 'Verify Bangladesh retail MRP, strip rates & generic substitutes'}
+            </p>
+          </div>
+        </div>
+        <span className="px-2.5 py-1 rounded-lg bg-[#1a9e75]/25 hover:bg-[#1a9e75]/40 text-[#4edea3] text-[10px] font-extrabold flex items-center gap-0.5 shrink-0 border border-[#1a9e75]/30">
+          <span>Check</span>
+          <span className="material-symbols-outlined text-xs">arrow_forward</span>
+        </span>
       </div>
 
       {/* Search Input Bar (iOS 26 Liquid Glass Capsule) */}
@@ -391,8 +431,8 @@ export const ScreenInventory: React.FC<ScreenInventoryProps> = ({
                   )}
                 </div>
 
-                {/* Price Chips */}
-                <div className="flex items-center gap-2 mt-2.5">
+                {/* Price Chips & MedEx Button */}
+                <div className="flex items-center gap-2 mt-2.5 flex-wrap">
                   <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.06] border border-white/5">
                     <span className="text-[10px] uppercase text-[#938ea2] font-semibold">Strip</span>
                     <span className="text-xs font-bold text-white">৳{med.stripPrice}</span>
@@ -401,6 +441,20 @@ export const ScreenInventory: React.FC<ScreenInventoryProps> = ({
                     <span className="text-[10px] uppercase text-[#938ea2] font-semibold">Piece</span>
                     <span className="text-xs font-bold text-white">৳{med.piecePrice}</span>
                   </div>
+                  
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openMedexPriceChecker(med.name.split(' ')[0]);
+                    }}
+                    title="Check official real-time price on medex.com.bd"
+                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#1a9e75]/15 hover:bg-[#1a9e75]/30 text-[#4edea3] border border-[#1a9e75]/30 text-[10px] font-bold active:scale-95 transition-all cursor-pointer shadow-sm"
+                  >
+                    <span className="material-symbols-outlined text-[13px]">travel_explore</span>
+                    <span>MedEx MRP</span>
+                  </button>
+
                   <span className="text-[10px] text-[#938ea2] ml-auto">
                     {med.unitsPerStrip} pcs / strip
                   </span>

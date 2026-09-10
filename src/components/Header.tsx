@@ -15,7 +15,7 @@ export const Header: React.FC<HeaderProps> = ({
   showBack = false,
   onBack
 }) => {
-  const { activeTab, setActiveTab, settings, toggleTheme, setMoreSubTab } = usePharmacy();
+  const { activeTab, setActiveTab, settings, toggleTheme, setMoreSubTab, openMedexPriceChecker } = usePharmacy();
   const isDark = (settings.themeMode || settings.theme) !== 'light';
 
   const handleBack = () => {
@@ -39,6 +39,8 @@ export const Header: React.FC<HeaderProps> = ({
         return 'Dues';
       case 'more':
         return 'More Settings';
+      case 'medex':
+        return 'MedEx Live Price';
       default:
         return 'Dashboard';
     }
@@ -46,6 +48,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   const getHeaderSubtitle = () => {
     if (subtitle) return subtitle;
+    if (activeTab === 'medex') return 'Official medex.com.bd MRP';
     return settings?.pharmacyName || 'MediExpences';
   };
 
@@ -98,7 +101,18 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <button
+              onClick={() => openMedexPriceChecker()}
+              type="button"
+              title="Check real-time medicine prices on medex.com.bd"
+              className="h-8 px-2.5 rounded-full flex items-center gap-1.5 bg-gradient-to-r from-[#1a9e75]/25 to-[#4edea3]/20 border border-[#1a9e75]/40 text-[#4edea3] hover:bg-[#1a9e75]/35 active:scale-95 transition-all cursor-pointer text-[11px] font-extrabold shadow-sm"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-[#4edea3] animate-pulse" />
+              <span className="material-symbols-outlined text-[15px]">travel_explore</span>
+              <span className="hidden sm:inline">MedEx</span>
+            </button>
+
             <PWAInstallButton variant="compact" />
             <button
               id="theme-mode-toggle-btn"
