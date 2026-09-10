@@ -99,7 +99,10 @@ export interface PharmacySettings {
   pharmacyName: string;
   adminName: string;
   location: string;
+  address?: string;
+  phone?: string;
   tradeLicense: string;
+  drugLicense?: string;
   vatBin: string;
   printerConnected: boolean;
   printerModel: string;
@@ -107,4 +110,5 @@ export interface PharmacySettings {
   themeMode?: 'dark' | 'light';
   currency: string;
   monthlyBudget: number;
+  logoUrl?: string;
 }

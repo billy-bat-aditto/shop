@@ -8,6 +8,7 @@ export const ScreenHome: React.FC = () => {
     todayProfitTotal,
     lowStockCount,
     medicines,
+    settings,
     setActiveTab,
     setMoreSubTab,
     setIsAddMedModalOpen
@@ -23,25 +24,49 @@ export const ScreenHome: React.FC = () => {
     ? Math.round((todayProfitTotal / todaySalesTotal) * 1000) / 10
     : 84.6;
 
+  // Real-time live date formatted accurately based on client system clock
+  const currentDateFormatted = new Intl.DateTimeFormat('en-US', {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short'
+  }).format(new Date());
+
   return (
     <div className="flex flex-col w-full pb-28 pt-2">
       {/* Header Greeting & Live Shop Badge */}
       <div className="flex items-center justify-between py-1 mb-4">
         <div className="flex items-center gap-3">
-          {/* Glowing Brand Cross with Capsule */}
-          <div className="w-12 h-12 rounded-2xl bg-white/[0.08] backdrop-blur-xl p-1.5 flex items-center justify-center border border-white/20 shadow-lg shadow-[#6d4aff]/20">
-            <div className="w-full h-full rounded-xl bg-gradient-to-tr from-[#6d4aff] to-[#4edea3] flex items-center justify-center shadow-inner relative overflow-hidden">
-              <span className="material-symbols-outlined text-white text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-                medication
-              </span>
-            </div>
+          {/* Brand Logo with Liquid Glass Framing */}
+          <div
+            onClick={() => {
+              setActiveTab('more');
+              setMoreSubTab('settings');
+            }}
+            className="w-12 h-12 rounded-2xl bg-white/[0.08] backdrop-blur-xl p-1 flex items-center justify-center border border-white/20 shadow-lg shadow-[#6d4aff]/20 overflow-hidden cursor-pointer hover:scale-105 active:scale-95 transition-all"
+            title="Tap to manage branding in Settings"
+          >
+            <img
+              src={settings?.logoUrl || '/logo.png'}
+              alt="MediExpences Logo"
+              className="w-full h-full object-cover rounded-xl shadow-inner"
+              referrerPolicy="no-referrer"
+            />
           </div>
-          <div className="flex flex-col">
-            <span className="text-[11px] font-bold text-[#6d4aff] dark:text-[#d0bcff] uppercase tracking-wider">
-              Thu, 24 Oct
+          <div className="flex flex-col min-w-0">
+            <span className="text-[11px] font-bold text-[#6d4aff] dark:text-[#d0bcff] uppercase tracking-wider flex items-center gap-1">
+              <span>{currentDateFormatted}</span>
+              <span className="w-1 h-1 rounded-full bg-[#4edea3]" />
+              <span className="text-[9px] font-medium text-[#4edea3]">today</span>
             </span>
-            <span className="text-base font-extrabold text-[#0a0518] dark:text-white tracking-tight leading-tight">
-              MediExpences
+            <span
+              onClick={() => {
+                setActiveTab('more');
+                setMoreSubTab('settings');
+              }}
+              className="text-base font-extrabold text-[#0a0518] dark:text-white tracking-tight leading-tight truncate max-w-[210px] cursor-pointer hover:underline"
+              title={settings?.pharmacyName || 'MediExpences'}
+            >
+              {settings?.pharmacyName || 'MediExpences'}
             </span>
           </div>
         </div>

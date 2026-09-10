@@ -13,7 +13,8 @@ export const ScreenCheckout: React.FC<ScreenCheckoutProps> = ({ onBack }) => {
     checkoutSale,
     activeReceipt,
     setActiveReceipt,
-    setActiveTab
+    setActiveTab,
+    settings
   } = usePharmacy();
 
   // If activeReceipt exists (already completed sale), we show the confirmed receipt view!
@@ -71,9 +72,13 @@ export const ScreenCheckout: React.FC<ScreenCheckoutProps> = ({ onBack }) => {
 
   const handleShareReceipt = () => {
     const saleId = activeReceipt ? activeReceipt.id : 'Receipt #1042';
+    const storeName = (settings?.pharmacyName || 'MediExpences Pharmacy').toUpperCase();
+    const storeAddress = settings?.location || settings?.address || 'Dhaka, Bangladesh';
+    const storePhone = settings?.phone ? `Tel: ${settings.phone}` : '';
     const textReceipt = `
 ========================================
-💊 MEDIEXPENCES BY ADITTO
+💊 ${storeName}
+${storeAddress} ${storePhone ? `| ${storePhone}` : ''}
 ${saleId} | ${activeReceipt ? activeReceipt.timestamp : new Date().toLocaleString()}
 Customer: ${activeReceipt ? activeReceipt.customerName : customerName}
 ----------------------------------------
@@ -96,7 +101,7 @@ Thank you for your visit! 💜
     if (navigator.share) {
       navigator
         .share({
-          title: `Receipt - MediExpences`,
+          title: `Receipt - ${settings?.pharmacyName || 'MediExpences'}`,
           text: textReceipt
         })
         .catch(() => {});
@@ -127,8 +132,19 @@ Thank you for your visit! 💜
             ))}
           </div>
 
+          {/* Pharmacy Branding Top Banner on Receipt */}
+          <div className="text-center pb-2.5 mb-2 border-b border-dashed border-white/15">
+            <h2 className="text-sm font-black uppercase text-white tracking-wide">
+              {settings?.pharmacyName || 'MediExpences Pharmacy'}
+            </h2>
+            <p className="text-[11px] text-[#938ea2]">
+              {settings?.location || settings?.address || 'Dhaka, Bangladesh'}
+              {settings?.phone ? ` • ${settings.phone}` : ''}
+            </p>
+          </div>
+
           {/* Receipt Meta Header */}
-          <div className="flex justify-between items-start pt-2 pb-3 border-b border-white/10">
+          <div className="flex justify-between items-start pt-1 pb-3 border-b border-white/10">
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[#a78bff] text-[20px]">

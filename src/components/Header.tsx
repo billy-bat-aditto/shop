@@ -14,7 +14,7 @@ export const Header: React.FC<HeaderProps> = ({
   showBack = false,
   onBack
 }) => {
-  const { activeTab, setActiveTab, settings, toggleTheme } = usePharmacy();
+  const { activeTab, setActiveTab, settings, toggleTheme, setMoreSubTab } = usePharmacy();
   const isDark = (settings.themeMode || settings.theme) !== 'light';
 
   const handleBack = () => {
@@ -45,7 +45,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   const getHeaderSubtitle = () => {
     if (subtitle) return subtitle;
-    return 'MediExpences';
+    return settings?.pharmacyName || 'MediExpences';
   };
 
   return (
@@ -57,7 +57,7 @@ export const Header: React.FC<HeaderProps> = ({
       }`}>
         {/* Navigation & Action Bar */}
         <div className="h-14 px-4 flex items-center justify-between">
-          <div className="flex items-center gap-2 min-w-0">
+          <div className="flex items-center gap-2.5 min-w-0">
             {showBack ? (
               <button
                 onClick={handleBack}
@@ -66,7 +66,23 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <span className="material-symbols-outlined text-[18px]">arrow_back_ios_new</span>
               </button>
-            ) : null}
+            ) : (
+              <div
+                onClick={() => {
+                  setActiveTab('more');
+                  setMoreSubTab('settings');
+                }}
+                className="w-9 h-9 rounded-xl overflow-hidden shadow-sm shrink-0 border border-white/25 bg-black/20 cursor-pointer transition-transform active:scale-95 group"
+                title="Tap to change logo in Settings"
+              >
+                <img
+                  src={settings?.logoUrl || '/logo.png'}
+                  alt="App Logo"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+            )}
             <div className="flex flex-col min-w-0">
               <span className={`text-[9px] uppercase tracking-wider font-extrabold leading-none ${
                 isDark ? 'text-[#a78bff]' : 'text-[#6d4aff]'

@@ -40,9 +40,52 @@ export const ScreenMore: React.FC = () => {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  // Pharmacy Details Edit State
+  const [isEditingPharmacy, setIsEditingPharmacy] = useState(false);
+  const [formPharmacyName, setFormPharmacyName] = useState(settings.pharmacyName);
+  const [formAdminName, setFormAdminName] = useState(settings.adminName);
+  const [formLocation, setFormLocation] = useState(settings.location || settings.address || '');
+  const [formPhone, setFormPhone] = useState(settings.phone || '');
+  const [formTradeLicense, setFormTradeLicense] = useState(settings.tradeLicense);
+  const [formDrugLicense, setFormDrugLicense] = useState(settings.drugLicense || '');
+  const [formVatBin, setFormVatBin] = useState(settings.vatBin);
+
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  const handleStartEditPharmacy = () => {
+    setFormPharmacyName(settings.pharmacyName);
+    setFormAdminName(settings.adminName);
+    setFormLocation(settings.location || settings.address || '');
+    setFormPhone(settings.phone || '');
+    setFormTradeLicense(settings.tradeLicense);
+    setFormDrugLicense(settings.drugLicense || '');
+    setFormVatBin(settings.vatBin);
+    setIsEditingPharmacy(true);
+  };
+
+  const handleSavePharmacyDetails = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formPharmacyName.trim()) {
+      showToast('Pharmacy name cannot be empty');
+      return;
+    }
+
+    updateSettings({
+      pharmacyName: formPharmacyName.trim(),
+      adminName: formAdminName.trim() || 'Admin',
+      location: formLocation.trim() || 'Dhaka, Bangladesh',
+      address: formLocation.trim() || 'Dhaka, Bangladesh',
+      phone: formPhone.trim(),
+      tradeLicense: formTradeLicense.trim(),
+      drugLicense: formDrugLicense.trim(),
+      vatBin: formVatBin.trim()
+    });
+
+    setIsEditingPharmacy(false);
+    showToast(`Pharmacy updated to "${formPharmacyName.trim()}"! ✨`);
   };
 
   const handleAddExpense = (e: React.FormEvent) => {
@@ -444,21 +487,192 @@ export const ScreenMore: React.FC = () => {
       {/* SUB-VIEW 3: SETTINGS & BACKUP */}
       {moreSubTab === 'settings' && (
         <div className="flex flex-col gap-4 animate-in fade-in duration-200">
-          {/* Admin Profile Card */}
-          <div className="glass-card rounded-[24px] p-4 flex items-center gap-3.5">
-            <div className="w-13 h-13 rounded-2xl bg-gradient-to-tr from-[#6d4aff] to-[#a78bff] flex items-center justify-center text-white shadow-lg text-2xl font-black">
-              A
+          {/* Pharmacy Identity & Admin Profile Card (with Edit Form) */}
+          <div className="glass-card rounded-[24px] p-4 flex flex-col gap-3">
+            <div className="flex items-center justify-between pb-1 border-b border-white/10">
+              <span className="text-xs font-bold uppercase text-white flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[16px] text-[#a78bff]">storefront</span>
+                <span>Pharmacy Profile & Identity</span>
+              </span>
+              {!isEditingPharmacy ? (
+                <button
+                  type="button"
+                  onClick={handleStartEditPharmacy}
+                  className="px-2.5 py-1 rounded-full bg-[#6d4aff]/20 hover:bg-[#6d4aff]/30 text-[#d0bcff] font-bold text-[11px] flex items-center gap-1 transition-all cursor-pointer active:scale-95 border border-[#6d4aff]/30"
+                >
+                  <span className="material-symbols-outlined text-[14px]">edit</span>
+                  <span>Edit Name & Details</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setIsEditingPharmacy(false)}
+                  className="px-2 py-0.5 rounded-full bg-white/10 hover:bg-white/15 text-white/70 text-[10px] font-semibold flex items-center gap-1 transition-all cursor-pointer"
+                >
+                  <span className="material-symbols-outlined text-[13px]">close</span>
+                  <span>Cancel</span>
+                </button>
+              )}
             </div>
-            <div className="flex flex-col">
-              <div className="flex items-center gap-1.5">
-                <span className="text-base font-bold text-white">{settings.adminName}</span>
-                <span className="px-2 py-0.5 rounded-full bg-[#6d4aff]/30 text-[#d0bcff] text-[9px] font-bold uppercase">
-                  Admin
-                </span>
+
+            {!isEditingPharmacy ? (
+              /* Normal View: Displays current profile nicely */
+              <div className="flex flex-col gap-3 pt-1">
+                <div className="flex items-center gap-3.5">
+                  <div className="w-13 h-13 rounded-2xl bg-gradient-to-tr from-[#6d4aff] to-[#a78bff] flex items-center justify-center text-white shadow-lg text-2xl font-black shrink-0">
+                    {settings.pharmacyName.charAt(0).toUpperCase() || 'M'}
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-base font-extrabold text-white tracking-tight truncate max-w-[200px]">
+                        {settings.pharmacyName}
+                      </span>
+                      <span className="px-2 py-0.5 rounded-full bg-[#4edea3]/20 text-[#4edea3] text-[9px] font-bold uppercase tracking-wider">
+                        Active
+                      </span>
+                    </div>
+                    <span className="text-xs text-[#d0bcff] font-medium mt-0.5">
+                      In-Charge: {settings.adminName}
+                    </span>
+                    <span className="text-[11px] text-[#938ea2] truncate">
+                      {settings.location || settings.address || 'Dhaka, Bangladesh'}
+                      {settings.phone ? ` • ${settings.phone}` : ''}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/5 text-[11px]">
+                  <div className="p-2 rounded-xl bg-white/[0.03] border border-white/5 flex flex-col">
+                    <span className="text-[10px] text-[#938ea2] font-medium">Trade License</span>
+                    <span className="font-semibold text-white truncate">{settings.tradeLicense}</span>
+                  </div>
+                  <div className="p-2 rounded-xl bg-white/[0.03] border border-white/5 flex flex-col">
+                    <span className="text-[10px] text-[#938ea2] font-medium">Drug Reg No.</span>
+                    <span className="font-semibold text-white truncate">{settings.drugLicense || 'DGDA-DH-4482'}</span>
+                  </div>
+                </div>
               </div>
-              <span className="text-xs text-[#a78bff]">{settings.pharmacyName}</span>
-              <span className="text-[11px] text-[#938ea2]">{settings.address}</span>
-            </div>
+            ) : (
+              /* Edit View: Interactive Form to change pharmacy name & info */
+              <form onSubmit={handleSavePharmacyDetails} className="flex flex-col gap-3 pt-1 animate-in fade-in duration-150">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] font-bold text-white uppercase tracking-wider flex items-center gap-1">
+                    <span>Pharmacy Name</span>
+                    <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formPharmacyName}
+                    onChange={(e) => setFormPharmacyName(e.target.value)}
+                    placeholder="e.g. Popular Medical Hall"
+                    className="h-10 px-3 rounded-xl bg-black/40 border border-[#6d4aff]/50 focus:border-[#a78bff] text-white text-xs font-semibold outline-none transition-colors shadow-inner"
+                  />
+                  <span className="text-[10px] text-[#938ea2]">
+                    Updates the app header, home dashboard greeting, printed POS thermal slips, and invoices.
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2.5">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[11px] font-bold text-white/90">
+                      In-Charge / Pharmacist
+                    </label>
+                    <input
+                      type="text"
+                      value={formAdminName}
+                      onChange={(e) => setFormAdminName(e.target.value)}
+                      placeholder="e.g. Aditto"
+                      className="h-9 px-2.5 rounded-xl bg-black/30 border border-white/10 focus:border-[#6d4aff] text-white text-xs outline-none"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[11px] font-bold text-white/90">
+                      Contact Phone
+                    </label>
+                    <input
+                      type="text"
+                      value={formPhone}
+                      onChange={(e) => setFormPhone(e.target.value)}
+                      placeholder="e.g. +880 1712-345678"
+                      className="h-9 px-2.5 rounded-xl bg-black/30 border border-white/10 focus:border-[#6d4aff] text-white text-xs outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] font-bold text-white/90">
+                    Store Location / Address
+                  </label>
+                  <input
+                    type="text"
+                    value={formLocation}
+                    onChange={(e) => setFormLocation(e.target.value)}
+                    placeholder="e.g. Shop 14, Central Market, Dhaka"
+                    className="h-9 px-3 rounded-xl bg-black/30 border border-white/10 focus:border-[#6d4aff] text-white text-xs outline-none"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-2.5">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[11px] font-bold text-white/90">
+                      Trade License
+                    </label>
+                    <input
+                      type="text"
+                      value={formTradeLicense}
+                      onChange={(e) => setFormTradeLicense(e.target.value)}
+                      placeholder="e.g. TRAD/DHK/99410"
+                      className="h-9 px-2.5 rounded-xl bg-black/30 border border-white/10 focus:border-[#6d4aff] text-white text-xs outline-none"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[11px] font-bold text-white/90">
+                      Drug Reg / DGDA
+                    </label>
+                    <input
+                      type="text"
+                      value={formDrugLicense}
+                      onChange={(e) => setFormDrugLicense(e.target.value)}
+                      placeholder="e.g. DGDA-DH-4482"
+                      className="h-9 px-2.5 rounded-xl bg-black/30 border border-white/10 focus:border-[#6d4aff] text-white text-xs outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-[11px] font-bold text-white/90">
+                    VAT / BIN Number
+                  </label>
+                  <input
+                    type="text"
+                    value={formVatBin}
+                    onChange={(e) => setFormVatBin(e.target.value)}
+                    placeholder="e.g. 002849182-0101"
+                    className="h-9 px-3 rounded-xl bg-black/30 border border-white/10 focus:border-[#6d4aff] text-white text-xs outline-none"
+                  />
+                </div>
+
+                <div className="flex items-center gap-2 pt-1.5">
+                  <button
+                    type="submit"
+                    className="flex-1 h-10 rounded-xl bg-gradient-to-r from-[#6d4aff] to-[#a78bff] hover:from-[#5b3adb] hover:to-[#9370ff] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-[#6d4aff]/30 cursor-pointer active:scale-95 transition-all"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">check</span>
+                    <span>Save Pharmacy Details</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsEditingPharmacy(false)}
+                    className="px-4 h-10 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-semibold cursor-pointer active:scale-95 transition-all"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
 
           {/* Theme & Aesthetics Control */}
@@ -477,8 +691,8 @@ export const ScreenMore: React.FC = () => {
                   </span>
                   <span className="text-[11px] text-[#938ea2]">
                     {(settings.themeMode || settings.theme) !== 'light' 
-                      ? 'Deep #0a0614 canvas with glowing purple orbs' 
-                      : 'Crisp high-contrast daylight aesthetic'}
+                       ? 'Deep #0a0614 canvas with glowing purple orbs' 
+                       : 'Crisp high-contrast daylight aesthetic'}
                   </span>
                 </div>
               </div>
@@ -495,6 +709,152 @@ export const ScreenMore: React.FC = () => {
                   }`}
                 />
               </button>
+            </div>
+          </div>
+
+          {/* App Logo Selection Gallery (Choose 1) */}
+          <div className="liquid-glass-card rounded-[28px] p-4 flex flex-col gap-3">
+            <div className="flex items-center justify-between pb-1 border-b border-white/10">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[18px] text-[#4edea3]">palette</span>
+                <span className="text-xs font-bold uppercase text-white">Choose App Logo</span>
+              </div>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#6d4aff]/20 text-[#a78bff] font-bold">
+                4 iOS 26 Styles
+              </span>
+            </div>
+
+            <p className="text-xs text-[#938ea2] leading-relaxed">
+              Select your preferred liquid glass brand emblem. The chosen logo instantly updates across your top header, dashboard brand badge, and browser tab.
+            </p>
+
+            {/* Current Active Preview Banner */}
+            <div className="p-3 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl overflow-hidden shadow-lg border border-white/30 bg-black/40 p-0.5 shrink-0">
+                  <img
+                    src={settings.logoUrl || '/logos/liquid-cross.jpg'}
+                    alt="Active App Logo"
+                    className="w-full h-full object-cover rounded-xl"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[10px] uppercase font-extrabold text-[#4edea3] flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#4edea3] animate-pulse" />
+                    Active App Logo
+                  </span>
+                  <span className="text-sm font-bold text-white mt-0.5">
+                    {settings.logoUrl?.includes('capsule')
+                      ? 'Bioluminescent Capsule'
+                      : settings.logoUrl?.includes('hex')
+                      ? 'Hexagonal Rx Prism'
+                      : settings.logoUrl?.includes('zen')
+                      ? 'Botanical Mortar & Leaf'
+                      : 'Liquid Glass Cross'}
+                  </span>
+                  <span className="text-[11px] text-[#938ea2]">
+                    Syncs to Git /public/logo.png
+                  </span>
+                </div>
+              </div>
+
+              <a
+                href={settings.logoUrl || '/logos/liquid-cross.jpg'}
+                download="logo.png"
+                className="px-3 py-1.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.15] border border-white/15 text-white font-semibold text-xs flex items-center gap-1 transition-all active:scale-95 cursor-pointer shrink-0"
+                title="Download for your Git repository"
+              >
+                <span className="material-symbols-outlined text-[16px]">download</span>
+                <span>Download</span>
+              </a>
+            </div>
+
+            {/* 4 Logo Cards Grid */}
+            <div className="grid grid-cols-2 gap-3 pt-1">
+              {[
+                {
+                  id: 'liquid-cross',
+                  name: 'Liquid Cross',
+                  tag: 'Refractive Caustics',
+                  url: '/logos/liquid-cross.jpg',
+                  desc: '3D glass cross with fluid indigo & bioluminescent mint glow.'
+                },
+                {
+                  id: 'capsule-pulse',
+                  name: 'Bio Capsule',
+                  tag: 'Dual-Tone Glow',
+                  url: '/logos/capsule-pulse.jpg',
+                  desc: 'Frosted glass capsule floating with electric violet & neon mint.'
+                },
+                {
+                  id: 'hex-rx',
+                  name: 'Hex Rx Prism',
+                  tag: 'Geometric Tech',
+                  url: '/logos/hex-rx.jpg',
+                  desc: 'Modern Rx emblem with digital cross in liquid crystal.'
+                },
+                {
+                  id: 'zen-mortar',
+                  name: 'Zen Mortar',
+                  tag: 'Botanical Leaf',
+                  url: '/logos/zen-mortar.jpg',
+                  desc: 'Clear fluid mortar crowned with glowing medicinal herbal leaf.'
+                }
+              ].map((logo) => {
+                const isActive = (settings.logoUrl || '/logos/liquid-cross.jpg') === logo.url;
+                return (
+                  <div
+                    key={logo.id}
+                    onClick={() => {
+                      updateSettings({ logoUrl: logo.url });
+                      showToast(`Switched logo to ${logo.name}! ✨`);
+                    }}
+                    className={`p-2.5 rounded-[22px] transition-all cursor-pointer flex flex-col items-center text-center relative group active:scale-95 ${
+                      isActive
+                        ? 'bg-gradient-to-b from-[#6d4aff]/30 to-[#6d4aff]/10 border-2 border-[#a78bff] shadow-lg shadow-[#6d4aff]/30'
+                        : 'bg-white/[0.04] hover:bg-white/[0.08] border border-white/10'
+                    }`}
+                  >
+                    {isActive && (
+                      <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-[#4edea3] text-black flex items-center justify-center shadow-md">
+                        <span className="material-symbols-outlined text-[14px] font-black">check</span>
+                      </div>
+                    )}
+
+                    {/* Logo Image Preview */}
+                    <div className="w-16 h-16 rounded-2xl overflow-hidden border border-white/20 shadow-md bg-black/40 mb-2 group-hover:scale-105 transition-transform">
+                      <img
+                        src={logo.url}
+                        alt={logo.name}
+                        className="w-full h-full object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+
+                    <span className="text-xs font-black text-white leading-tight">
+                      {logo.name}
+                    </span>
+                    <span className="text-[9px] uppercase tracking-wider text-[#a78bff] font-bold mt-0.5">
+                      {logo.tag}
+                    </span>
+                    <p className="text-[10px] text-[#938ea2] mt-1 line-clamp-2 leading-snug">
+                      {logo.desc}
+                    </p>
+
+                    <button
+                      type="button"
+                      className={`mt-2.5 w-full py-1.5 rounded-xl text-[11px] font-bold transition-all ${
+                        isActive
+                          ? 'bg-[#4edea3] text-black shadow-sm'
+                          : 'bg-white/10 hover:bg-white/20 text-white'
+                      }`}
+                    >
+                      {isActive ? 'Active Logo' : 'Select Logo'}
+                    </button>
+                  </div>
+                );
+              })}
             </div>
           </div>
 

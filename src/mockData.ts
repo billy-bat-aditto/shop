@@ -475,11 +475,15 @@ export const INITIAL_SETTINGS: PharmacySettings = {
   pharmacyName: 'MediExpences Pharmacy',
   adminName: 'Aditto',
   location: 'Dhaka, Bangladesh',
+  address: 'Shop 14, Central Market, Dhaka',
+  phone: '+880 1712-345678',
   tradeLicense: 'TRAD/DHK/99410',
+  drugLicense: 'DGDA-DH-4482',
   vatBin: '002849182-0101',
   printerConnected: true,
   printerModel: 'RPP02N Bluetooth (58/80mm)',
   theme: 'dark',
   currency: '৳',
-  monthlyBudget: 15000
+  monthlyBudget: 15000,
+  logoUrl: '/logos/liquid-cross.jpg'
 };
